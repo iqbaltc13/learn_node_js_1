@@ -20,12 +20,12 @@
       <tbody>
          {{#each results}}
         <tr>
-          <td>{{ product_id }}</td>
+          <td>{{ id }}</td>
           <td>{{ product_name }}</td>
           <td>{{ product_price }}</td>
           <td>
-            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id="{{ product_id }}" data-product_name="{{ product_name }}" data-product_price="{{ product_price }}">Edit</a>
-            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete" data-id="{{ product_id }}">Delete</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-info edit" data-id="{{ id }}" data-product_name="{{ product_name }}" data-product_price="{{ product_price }}">Edit</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete" data-id="{{ id }}">Delete</a>
           </td>
         </tr>
         {{/each}}
@@ -63,7 +63,7 @@
 	 </form>
 
 	 <!-- Edit Product Modal-->
-   <form action="/update" method="post">
+   <form id="form-update" action="/update" method="post">
        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -74,6 +74,7 @@
               </button>
             </div>
             <div class="modal-body">
+              <input type="hidden" name="_method" value="put" />
               <div class="form-group">
                   <input type="text" name="product_name" class="form-control product_name" placeholder="Product Name" required>
               </div>
@@ -93,7 +94,7 @@
   </form>
 
 	 <!-- Delete Product Modal-->
- 	  <form id="add-row-form" action="/delete" method="post">
+ 	  <form id="form-delete" action="/delete" method="post">
  	     <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
  	        <div class="modal-dialog">
  	           <div class="modal-content">
@@ -105,6 +106,7 @@
 												 <strong>Are You Sure To Delete This Data?</strong>
  	               </div>
  	               <div class="modal-footer">
+                      <input type="hidden" name="_method" value="delete" />
 									 		<input type="hidden" name="product_id" class="form-control product_id2" required>
  	                   	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
  	                  	<button type="submit" class="btn btn-success">Delete</button>
@@ -127,12 +129,14 @@
         $('.product_name').val(product_name);
         $('.price').val(product_price);
         $('.product_id').val(product_id);
+        $('#form-update').attr('action', '/update/'+product_id);
       });
 			//showing modal for delete record
 			$('#mytable').on('click','.delete',function(){
         var product_id = $(this).data('id');
         $('#DeleteModal').modal('show');
         $('.product_id2').val(product_id);
+        $('#form-delete').attr('action', '/delete/'+product_id);
       });
 
     });
